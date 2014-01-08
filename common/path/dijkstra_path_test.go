@@ -217,8 +217,8 @@ func ExampleDijkstraPath_merge() {
 
 func ExampleDijkstraIterator_value() {
 	it := path.rootPathIterator()
-	for it.Next() {
-		fmt.Printf("%v\n", it.Path().Path)
+	for it.next() {
+		fmt.Printf("%v\n", it.path().Path)
 	}
 
 	// Output:
