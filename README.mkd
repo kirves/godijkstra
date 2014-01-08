@@ -1,0 +1,39 @@
+Go-Dijkstra
+==========
+
+[![Build Status](https://travis-ci.org/kirves/godijkstra.png?branch=master)](https://travis-ci.org/kirves/godijkstra)
+
+Description
+-----------
+
+This is a library for the Go programming language implementing the Dijkstra, Dijkstra bidirectional and Yen's graph search algorithms.
+It works with any graph object implementing the GraphObject interface, having therefore means of getting the successors and predecessors of any graph node and the weight of any edge in the graph.
+
+Installation
+------------
+
+This package can be installed with the go get command:
+
+	go get github.com/kirves/godijkstra/dijkstra
+
+
+Example
+-------
+
+After creating a graph object it is simply a matter of calling the desired search algorithm function:
+
+	path, valid := dijkstra.Dijkstra(graph, "START", "END", dijkstra.VANILLA)
+
+for standard Dijkstra algorithm
+
+or
+
+	path, valid := dijkstra.Dijkstra(graph, "START", "END", dijkstra.BIDIR)
+
+for the bidirectional version of the algorithm
+
+Documentation
+-------------
+
+API documentation can be found here: http://godoc.org/github.com/kirves/godijkstra/dijkstra
+
