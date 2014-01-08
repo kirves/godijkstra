@@ -80,7 +80,7 @@ func init() {
 }
 
 func TestSinglePath(t *testing.T) {
-	path, valid := Dijkstra(graph, "S", "T")
+	path, valid := Dijkstra(graph, "S", "T", BIDIR)
 	if !valid {
 		t.Fatal("Validity error.")
 	}
@@ -107,7 +107,7 @@ func TestShortcut(t *testing.T) {
 	revBk := graph.reverseEdges["T"]
 	graph.reverseEdges["T"]["C"] = struct{}{}
 
-	path, valid := Dijkstra(graph, "S", "T")
+	path, valid := Dijkstra(graph, "S", "T", BIDIR)
 	if !valid {
 		t.Fatal("Validity error.")
 	}
