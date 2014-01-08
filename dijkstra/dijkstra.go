@@ -59,7 +59,7 @@ func Dijkstra(graph GraphObject, startNode, endNode string, searchType int) (dij
 	var valid bool
 	switch searchType {
 	case VANILLA:
-		cs, valid = computeBiDirDijkstra(graph, startSet, endSet, dijkstrastructs.EmptyUnusableEdgeMap())
+		cs, valid = computeVanillaDijkstra(graph, startSet, endNode, dijkstrastructs.EmptyUnusableEdgeMap())
 	case BIDIR:
 		cs, valid = computeBiDirDijkstra(graph, startSet, endSet, dijkstrastructs.EmptyUnusableEdgeMap())
 	default:
@@ -244,114 +244,55 @@ func Dijkstra(graph GraphObject, startNode, endNode string, searchType int) (dij
 // 	return finalList
 // }
 
-// func computeVanillaDijkstra(
-// 	graph GraphObject,
-// 	startSet []*dijkstrastructs.DijkstraCandidate,
-// 	endSet []*dijkstrastructs.DijkstraCandidate,
-// 	bannedEdges dijkstrastructs.UnusableEdgeMap) (dijkstrastructs.CandidateSolution, bool) {
+func computeVanillaDijkstra(
+	graph GraphObject,
+	startSet []*dijkstrastructs.DijkstraCandidate,
+	endNode string,
+	bannedEdges dijkstrastructs.UnusableEdgeMap) (dijkstrastructs.CandidateSolution, bool) {
 
-// 	candidateSolution := dijkstrastructs.CandidateSolution{0, nil, nil}
-// 	skipForward := false
-// 	var succs []dijkstrastructs.Connection
-// 	visitedNodesF := make(map[string]*dijkstrastructs.DijkstraCandidate)
+	candidateSolution := dijkstrastructs.CandidateSolution{0, nil, nil}
+	var succs []dijkstrastructs.Connection
+	visitedNodesF := make(map[string]*dijkstrastructs.DijkstraCandidate)
 
-// 	openListF := &DijkstraQueue{}
-// 	openListB := &DijkstraQueue{}
-// 	heap.Init(openListF)
-// 	heap.Init(openListB)
+	openListF := &DijkstraQueue{}
+	heap.Init(openListF)
 
-// 	// create initial path set
-// 	for _, c := range startSet {
-// 		heap.Push(openListF, c)
-// 	}
+	// create initial path set
+	for _, c := range startSet {
+		heap.Push(openListF, c)
+	}
 
-// 	for _, c := range endSet {
-// 		heap.Push(openListB, c)
-// 	}
+	for openListF.Len() > 0 {
 
-// 	for openListF.Len() > 0 && openListB.Len() > 0 {
+		// get candidates
+		forwCandidate := heap.Pop(openListF).(*dijkstrastructs.DijkstraCandidate)
 
-// 		// get candidates
-// 		forwCandidate := heap.Pop(openListF).(*dijkstrastructs.DijkstraCandidate)
-// 		backCandidate := heap.Pop(openListB).(*dijkstrastructs.DijkstraCandidate)
+		// check if we reached termination
+		if forwCandidate.Node == endNode {
+			return dijkstrastructs.CandidateSolution{forwCandidate.Weight, forwCandidate, &dijkstrastructs.DijkstraCandidate{endNode, nil, 0}}, true
+		}
 
-// 		// check if we reached termination
-// 		if candidateSolution.Length != 0 && forwCandidate.Weight+backCandidate.Weight >= candidateSolution.Length {
-// 			break
-// 		}
+		if _, ok := visitedNodesF[forwCandidate.Node]; ok {
+			continue
+		} else {
+			visitedNodesF[forwCandidate.Node] = forwCandidate
+		}
 
-// 		// ***************************************************
-// 		// forward search
-// 		if _, ok := visitedNodesF[forwCandidate.Node]; ok {
-// 			skipForward = true
-// 		} else {
-// 			visitedNodesF[forwCandidate.Node] = forwCandidate
-// 			skipForward = false
-// 		}
+		succs = successorsForPath(graph, forwCandidate, bannedEdges)
 
-// 		if !skipForward {
-// 			if v, ok := visitedNodesB[forwCandidate.Node]; ok {
-// 				// found an explored backward path
-// 				newWeight := forwCandidate.Weight + v.Weight
-// 				if candidateSolution.Length == 0 || candidateSolution.Length > newWeight {
-// 					// found new solution candidate
-// 					candidateSolution.Length = newWeight
-// 					candidateSolution.ForwCandidate = forwCandidate
-// 					candidateSolution.BackCandidate = visitedNodesB[forwCandidate.Node]
-// 				}
-// 			}
+		// for each successors
+		for _, s := range succs {
+			if _, ok := visitedNodesF[s.Destination]; ok {
+				continue
+			}
+			newPath := newDijkstraCandidate(s.Destination, forwCandidate, forwCandidate.Weight+s.Weight)
+			// duplicate and add step
+			heap.Push(openListF, newPath)
+		}
+	}
 
-// 			succs = successorsForPath(graph, forwCandidate, bannedEdges)
-
-// 			// for each successors
-// 			for _, s := range succs {
-// 				if _, ok := visitedNodesF[s.Destination]; ok {
-// 					continue
-// 				}
-// 				newPath := newDijkstraCandidate(s.Destination, forwCandidate, forwCandidate.Weight+s.Weight)
-// 				// duplicate and add step
-// 				heap.Push(openListF, newPath)
-// 			}
-// 		}
-// 		// ****************************************************
-
-// 		// ***************************************************
-// 		// backward search
-// 		if _, ok := visitedNodesB[backCandidate.Node]; ok {
-// 			continue
-// 		} else {
-// 			visitedNodesB[backCandidate.Node] = backCandidate
-// 		}
-
-// 		if v, ok := visitedNodesF[backCandidate.Node]; ok {
-// 			// found an explored backward path
-// 			newWeight := backCandidate.Weight + v.Weight
-// 			if candidateSolution.Length == 0 || candidateSolution.Length > newWeight {
-// 				// found new solution candidate
-// 				candidateSolution.Length = newWeight
-// 				candidateSolution.ForwCandidate = visitedNodesF[backCandidate.Node]
-// 				candidateSolution.BackCandidate = backCandidate
-// 			}
-// 		}
-
-// 		succs = predecessorsForPath(graph, backCandidate, bannedEdges)
-
-// 		// for each successors
-// 		for _, s := range succs {
-// 			if _, ok := visitedNodesB[s.Destination]; ok {
-// 				continue
-// 			}
-// 			newPath := newDijkstraCandidate(s.Destination, backCandidate, backCandidate.Weight+s.Weight)
-// 			heap.Push(openListB, newPath)
-// 		}
-// 		// ****************************************************
-// 	}
-
-// 	if candidateSolution.Length == 0 {
-// 		return dijkstrastructs.CandidateSolution{}, false
-// 	}
-// 	return candidateSolution, true
-// }
+	return candidateSolution, true
+}
 
 func computeBiDirDijkstra(
 	graph GraphObject,
