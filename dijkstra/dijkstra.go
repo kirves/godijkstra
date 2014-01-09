@@ -46,25 +46,37 @@ func newDijkstraCandidate(node string, parent *dijkstrastructs.DijkstraCandidate
 
 // Dijkstra returns the shortest path within the provided graph object that goes from startNode to endNode nodes.
 // searchType parameter defines the type of algorithm to use.
-func Dijkstra(graph GraphObject, startNode, endNode string, searchType int) (dijkstrapath.DijkstraPath, bool) {
+func SearchPath(graph GraphObject, startNode, endNode string, searchType int) (dijkstrapath.DijkstraPath, bool) {
+	switch searchType {
+	case VANILLA:
+		return Dijkstra(graph, startNode, endNode, dijkstrastructs.EmptyUnusableEdgeMap())
+	case BIDIR:
+		return BiDirDijkstra(graph, startNode, endNode, dijkstrastructs.EmptyUnusableEdgeMap())
+	default:
+		return dijkstrapath.DijkstraPath{}, false
+	}
+}
 
+func Dijkstra(graph GraphObject, startNode, endNode string, bannedEdges dijkstrastructs.UnusableEdgeMap) (dijkstrapath.DijkstraPath, bool) {
+	// SETUP ================================
+	firstParent := newDijkstraCandidate(startNode, nil, 0)
+	startSet := []*dijkstrastructs.DijkstraCandidate{firstParent}
+	// ======================================
+	cs, valid := computeVanillaDijkstra(graph, startSet, endNode, bannedEdges)
+	if !valid {
+		return dijkstrapath.DijkstraPath{}, false
+	}
+	return dijkstrapath.ConvertToDijkstraPath(cs, startNode, endNode), true
+}
+
+func BiDirDijkstra(graph GraphObject, startNode, endNode string, bannedEdges dijkstrastructs.UnusableEdgeMap) (dijkstrapath.DijkstraPath, bool) {
 	// SETUP ================================
 	firstParent := newDijkstraCandidate(startNode, nil, 0)
 	lastParent := newDijkstraCandidate(endNode, nil, 0)
 	startSet := []*dijkstrastructs.DijkstraCandidate{firstParent}
 	endSet := []*dijkstrastructs.DijkstraCandidate{lastParent}
 	// ======================================
-
-	var cs dijkstrastructs.CandidateSolution
-	var valid bool
-	switch searchType {
-	case VANILLA:
-		cs, valid = computeVanillaDijkstra(graph, startSet, endNode, dijkstrastructs.EmptyUnusableEdgeMap())
-	case BIDIR:
-		cs, valid = computeBiDirDijkstra(graph, startSet, endSet, dijkstrastructs.EmptyUnusableEdgeMap())
-	default:
-		valid = false
-	}
+	cs, valid := computeBiDirDijkstra(graph, startSet, endSet, dijkstrastructs.EmptyUnusableEdgeMap())
 	if !valid {
 		return dijkstrapath.DijkstraPath{}, false
 	}
