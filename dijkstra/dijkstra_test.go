@@ -35,6 +35,7 @@ func init() {
 		"G": struct{}{},
 		"S": struct{}{},
 		"T": struct{}{},
+		"U": struct{}{},
 	}
 	edges := map[string]map[string]interface{}{
 		"A": map[string]interface{}{
@@ -127,4 +128,25 @@ func TestShortcut(t *testing.T) {
 
 	graph.edges["C"] = bk
 	graph.reverseEdges["T"] = revBk
+}
+
+func TestUnreachable(t *testing.T) {
+	_, valid1 := Dijkstra(graph, "S", "U", VANILLA)
+	_, valid2 := Dijkstra(graph, "S", "U", BIDIR)
+
+	if valid1 || valid2 {
+		t.Fatalf("A path was found in an unconnected graph.")
+	}
+}
+
+func TestEquality(t *testing.T) {
+	path1, valid1 := Dijkstra(graph, "S", "T", VANILLA)
+	path2, valid2 := Dijkstra(graph, "S", "T", BIDIR)
+
+	if !valid1 || !valid2 {
+		t.Fatal("A path search failed.")
+	}
+	if !path1.IsEqual(path2) {
+		t.Fatal("The algorithms yield different paths.")
+	}
 }
