@@ -22,13 +22,13 @@ Example
 
 After creating a graph object it is simply a matter of calling the desired search algorithm function:
 
-	path, valid := dijkstra.Dijkstra(graph, "START", "END", dijkstra.VANILLA)
+	path, valid := dijkstra.SearchPath(graph, "START", "END", dijkstra.VANILLA)
 
 for standard Dijkstra algorithm
 
 or
 
-	path, valid := dijkstra.Dijkstra(graph, "START", "END", dijkstra.BIDIR)
+	path, valid := dijkstra.SearchPath(graph, "START", "END", dijkstra.BIDIR)
 
 for the bidirectional version of the algorithm
 
