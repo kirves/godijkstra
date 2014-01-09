@@ -81,7 +81,7 @@ func init() {
 }
 
 func TestSinglePath(t *testing.T) {
-	path, valid := Dijkstra(graph, "S", "T", BIDIR)
+	path, valid := SearchPath(graph, "S", "T", BIDIR)
 	if !valid {
 		t.Fatal("Validity error.")
 	}
@@ -108,7 +108,7 @@ func TestShortcut(t *testing.T) {
 	revBk := graph.reverseEdges["T"]
 	graph.reverseEdges["T"]["C"] = struct{}{}
 
-	path, valid := Dijkstra(graph, "S", "T", BIDIR)
+	path, valid := SearchPath(graph, "S", "T", BIDIR)
 	if !valid {
 		t.Fatal("Validity error.")
 	}
@@ -131,8 +131,8 @@ func TestShortcut(t *testing.T) {
 }
 
 func TestUnreachable(t *testing.T) {
-	_, valid1 := Dijkstra(graph, "S", "U", VANILLA)
-	_, valid2 := Dijkstra(graph, "S", "U", BIDIR)
+	_, valid1 := SearchPath(graph, "S", "U", VANILLA)
+	_, valid2 := SearchPath(graph, "S", "U", BIDIR)
 
 	if valid1 || valid2 {
 		t.Fatalf("A path was found in an unconnected graph.")
@@ -140,8 +140,8 @@ func TestUnreachable(t *testing.T) {
 }
 
 func TestEquality(t *testing.T) {
-	path1, valid1 := Dijkstra(graph, "S", "T", VANILLA)
-	path2, valid2 := Dijkstra(graph, "S", "T", BIDIR)
+	path1, valid1 := SearchPath(graph, "S", "T", VANILLA)
+	path2, valid2 := SearchPath(graph, "S", "T", BIDIR)
 
 	if !valid1 || !valid2 {
 		t.Fatal("A path search failed.")
