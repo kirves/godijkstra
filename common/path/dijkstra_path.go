@@ -65,6 +65,19 @@ func ConvertToDijkstraPath(cs dijkstrastructs.CandidateSolution, start, end stri
 	return ret
 }
 
+// IsEqual states if two DijkstraPaths are equal
+func (dp DijkstraPath) IsEqual(p DijkstraPath) bool {
+	if len(dp.Path) != len(p.Path) {
+		return false
+	}
+	for i, v := range dp.Path {
+		if v.Node != p.Path[i].Node {
+			return false
+		}
+	}
+	return true
+}
+
 func appendForwardStepToDijkstraPath(dc *dijkstrastructs.DijkstraCandidate, path []DijkstraPathElement) []DijkstraPathElement {
 	if dc == nil {
 		return path
