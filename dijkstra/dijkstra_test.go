@@ -44,13 +44,14 @@ func init() {
 		},
 		"B": map[string]interface{}{
 			"C": struct{}{},
+			"D": struct{}{},
 		},
 		"C": map[string]interface{}{
 			"E": struct{}{},
-			"D": struct{}{},
+			"G": struct{}{},
 		},
 		"D": map[string]interface{}{
-			"G": struct{}{},
+			"C": struct{}{},
 		},
 		"E": map[string]interface{}{
 			"F": struct{}{},
@@ -63,7 +64,7 @@ func init() {
 		},
 		"S": map[string]interface{}{
 			"A": struct{}{},
-			"B": struct{}{},
+			// "B": struct{}{},
 		},
 	}
 	graph = newTestGraph()
@@ -88,7 +89,7 @@ func TestSinglePath(t *testing.T) {
 	if len(path.Path) <= 2 {
 		t.Fatal("Path length error.")
 	}
-	expPath := []string{"S", "A", "C", "D", "G", "T"}
+	expPath := []string{"S", "A", "C", "G", "T"}
 	for i, v := range path.Path {
 		if v.Node != expPath[i] {
 			t.Fatal("Wrong path.")
