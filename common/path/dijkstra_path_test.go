@@ -132,7 +132,7 @@ func ExampleDijkstraPath_weight() {
 }
 
 func ExampleDijkstraPath_rootPaths() {
-	subPaths := path.rootPaths()
+	subPaths := path.RootPaths()
 	for _, v := range subPaths {
 		for _, n := range v.Path {
 			fmt.Printf("%s-", n.Node)
@@ -149,7 +149,7 @@ func ExampleDijkstraPath_rootPaths() {
 }
 
 func ExampleDijkstraPath_rootIncluded() {
-	subPaths1 := path.rootPaths()
+	subPaths1 := path.RootPaths()
 	for _, v := range subPaths1 {
 		for _, n := range v.Path {
 			fmt.Printf("%s-", n.Node)
@@ -166,11 +166,11 @@ func ExampleDijkstraPath_rootIncluded() {
 }
 
 func ExampleDijkstraPath_edgesToRemove() {
-	subPaths2 := path2.rootPaths()
+	subPaths2 := path2.RootPaths()
 	for _, v := range subPaths2 {
 		edges := make([][]string, 0)
-		edges = append(edges, path.outgoingEdgeForSubPath(v))
-		edges = append(edges, path2.outgoingEdgeForSubPath(v))
+		edges = append(edges, path.OutgoingEdgeForSubPath(v))
+		edges = append(edges, path2.OutgoingEdgeForSubPath(v))
 		for _, n := range v.Path {
 			fmt.Printf("%s-", n.Node)
 		}
@@ -187,7 +187,7 @@ func ExampleDijkstraPath_edgesToRemove() {
 }
 
 func ExampleDijkstraPath_merge() {
-	subPaths2 := path2.rootPaths()
+	subPaths2 := path2.RootPaths()
 	sp := subPaths2[2]
 	for _, v := range sp.Path {
 		fmt.Printf("%s-", v.Node)
