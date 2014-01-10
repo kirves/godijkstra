@@ -30,7 +30,13 @@ or
 
 	path, valid := dijkstra.SearchPath(graph, "START", "END", dijkstra.BIDIR)
 
-for the bidirectional version of the algorithm
+for the bidirectional version of the algorithm.
+
+Yen's algorithm returns the k-shortest paths from a graph, using both a search algorithm and a deviation algorithm:
+
+	paths := yen.Yen(graph, "START", "END", k, searchFunc)
+
+where k is the number of paths to find and searchFunc is the search algorithm to use (the Dijkstra algorithm implemented in this package is fine).
 
 Documentation
 -------------
