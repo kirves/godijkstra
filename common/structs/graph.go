@@ -14,11 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package dijkstra
-
-import (
-	"github.com/kirves/godijkstra/common/structs"
-)
+package dijkstrastructs
 
 // GraphObject interface defines the minimum requirements for an object to be considered a graph by Go-Dijkstra.
 // It must implement three functionalities:
@@ -26,7 +22,7 @@ import (
 // getting the predecessors for a given node (this functionality is not required for the standard Dijkstra algorithm and can be a stub)
 // and returning the non-negative edge weight associated to two nodes.
 type GraphObject interface {
-	SuccessorsForNode(node string) []dijkstrastructs.Connection    // get successors for node
-	PredecessorsFromNode(node string) []dijkstrastructs.Connection // get predecessors for node
-	EdgeWeight(n1, n2 string) int                                  // get edge weight
+	SuccessorsForNode(node string) []Connection    // get successors for node
+	PredecessorsFromNode(node string) []Connection // get predecessors for node
+	EdgeWeight(n1, n2 string) int                  // get edge weight
 }
