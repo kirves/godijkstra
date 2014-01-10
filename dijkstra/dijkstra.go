@@ -16,7 +16,7 @@ limitations under the License.
 
 // Package Dijkstra provides an implementation of Dijkstra Algorithm to find the shortest path in directed graph.
 //
-// The Dijkstra Algorithm traverses a graph object implementing the dijkstra.GraphObject interface to find the shortest path;
+// The Dijkstra Algorithm traverses a graph object implementing the dijkstrastruct.GraphObject interface to find the shortest path;
 // the only limitation is that all the edges' weights must be non-negative.
 // The returned path, an instance of DijkstraPath struct, is a loopless path going from the starting node to the destination;
 // it can be computed using either the "vanilla" Dijkstra algorithm or a bidirectional search algorithm.
@@ -46,7 +46,7 @@ func newDijkstraCandidate(node string, parent *dijkstrastructs.DijkstraCandidate
 
 // Dijkstra returns the shortest path within the provided graph object that goes from startNode to endNode nodes.
 // searchType parameter defines the type of algorithm to use.
-func SearchPath(graph GraphObject, startNode, endNode string, searchType int) (dijkstrapath.DijkstraPath, bool) {
+func SearchPath(graph dijkstrastructs.GraphObject, startNode, endNode string, searchType int) (dijkstrapath.DijkstraPath, bool) {
 	switch searchType {
 	case VANILLA:
 		return Dijkstra(graph, startNode, endNode, dijkstrastructs.EmptyUnusableEdgeMap())
@@ -57,7 +57,7 @@ func SearchPath(graph GraphObject, startNode, endNode string, searchType int) (d
 	}
 }
 
-func Dijkstra(graph GraphObject, startNode, endNode string, bannedEdges dijkstrastructs.UnusableEdgeMap) (dijkstrapath.DijkstraPath, bool) {
+func Dijkstra(graph dijkstrastructs.GraphObject, startNode, endNode string, bannedEdges dijkstrastructs.UnusableEdgeMap) (dijkstrapath.DijkstraPath, bool) {
 	// SETUP ================================
 	firstParent := newDijkstraCandidate(startNode, nil, 0)
 	startSet := []*dijkstrastructs.DijkstraCandidate{firstParent}
@@ -69,7 +69,7 @@ func Dijkstra(graph GraphObject, startNode, endNode string, bannedEdges dijkstra
 	return dijkstrapath.ConvertToDijkstraPath(cs, startNode, endNode), true
 }
 
-func BiDirDijkstra(graph GraphObject, startNode, endNode string, bannedEdges dijkstrastructs.UnusableEdgeMap) (dijkstrapath.DijkstraPath, bool) {
+func BiDirDijkstra(graph dijkstrastructs.GraphObject, startNode, endNode string, bannedEdges dijkstrastructs.UnusableEdgeMap) (dijkstrapath.DijkstraPath, bool) {
 	// SETUP ================================
 	firstParent := newDijkstraCandidate(startNode, nil, 0)
 	lastParent := newDijkstraCandidate(endNode, nil, 0)
@@ -84,7 +84,7 @@ func BiDirDijkstra(graph GraphObject, startNode, endNode string, bannedEdges dij
 }
 
 func computeVanillaDijkstra(
-	graph GraphObject,
+	graph dijkstrastructs.GraphObject,
 	startSet []*dijkstrastructs.DijkstraCandidate,
 	endNode string,
 	bannedEdges dijkstrastructs.UnusableEdgeMap) (dijkstrastructs.CandidateSolution, bool) {
@@ -133,7 +133,7 @@ func computeVanillaDijkstra(
 }
 
 func computeBiDirDijkstra(
-	graph GraphObject,
+	graph dijkstrastructs.GraphObject,
 	startSet []*dijkstrastructs.DijkstraCandidate,
 	endSet []*dijkstrastructs.DijkstraCandidate,
 	bannedEdges dijkstrastructs.UnusableEdgeMap) (dijkstrastructs.CandidateSolution, bool) {
@@ -242,7 +242,7 @@ func computeBiDirDijkstra(
 	return candidateSolution, true
 }
 
-func successorsForPath(graph GraphObject, path *dijkstrastructs.DijkstraCandidate, bannedEdges dijkstrastructs.UnusableEdgeMap) []dijkstrastructs.Connection {
+func successorsForPath(graph dijkstrastructs.GraphObject, path *dijkstrastructs.DijkstraCandidate, bannedEdges dijkstrastructs.UnusableEdgeMap) []dijkstrastructs.Connection {
 	tmp := graph.SuccessorsForNode(path.Node)
 	ret := make([]dijkstrastructs.Connection, 0)
 	for _, s := range tmp {
@@ -253,7 +253,7 @@ func successorsForPath(graph GraphObject, path *dijkstrastructs.DijkstraCandidat
 	return ret
 }
 
-func predecessorsForPath(graph GraphObject, path *dijkstrastructs.DijkstraCandidate, bannedEdges dijkstrastructs.UnusableEdgeMap) []dijkstrastructs.Connection {
+func predecessorsForPath(graph dijkstrastructs.GraphObject, path *dijkstrastructs.DijkstraCandidate, bannedEdges dijkstrastructs.UnusableEdgeMap) []dijkstrastructs.Connection {
 	tmp := graph.PredecessorsFromNode(path.Node)
 	ret := make([]dijkstrastructs.Connection, 0)
 	for _, s := range tmp {
