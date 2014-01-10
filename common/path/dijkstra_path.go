@@ -90,7 +90,7 @@ func (dp DijkstraPath) computeWeight() int {
 	return dp.Path[len(dp.Path)-1].Weight
 }
 
-func (dp DijkstraPath) rootPaths() []DijkstraPath {
+func (dp DijkstraPath) RootPaths() []DijkstraPath {
 	ret := make([]DijkstraPath, len(dp.Path)-1)
 	// var tmpParent *DijkstraCandidate = nil
 	// var item *DijkstraCandidate
@@ -105,7 +105,7 @@ func (dp DijkstraPath) rootPaths() []DijkstraPath {
 	return ret
 }
 
-func (dp DijkstraPath) lastNode() DijkstraPathElement {
+func (dp DijkstraPath) LastNode() DijkstraPathElement {
 	return dp.Path[len(dp.Path)-1]
 }
 
@@ -121,7 +121,7 @@ func (dp DijkstraPath) includesPath(p DijkstraPath) bool {
 	return true
 }
 
-func (dp DijkstraPath) outgoingEdgeForSubPath(p DijkstraPath) []string {
+func (dp DijkstraPath) OutgoingEdgeForSubPath(p DijkstraPath) []string {
 	if !dp.includesPath(p) {
 		return nil
 	}
