@@ -129,7 +129,7 @@ func (dp DijkstraPath) OutgoingEdgeForSubPath(p DijkstraPath) []string {
 	return []string{dp.Path[edgeInd-1].Node, dp.Path[edgeInd].Node}
 }
 
-func (dp DijkstraPath) mergeWith(p DijkstraPath) DijkstraPath {
+func (dp DijkstraPath) MergeWith(p DijkstraPath) DijkstraPath {
 	ret := DijkstraPath{}
 	ret.Path = make([]DijkstraPathElement, len(dp.Path))
 	for i, e := range dp.Path {

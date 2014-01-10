@@ -197,7 +197,7 @@ func ExampleDijkstraPath_merge() {
 		fmt.Printf("%s-", v.Node)
 	}
 	fmt.Printf("\n")
-	ret := sp.mergeWith(path3)
+	ret := sp.MergeWith(path3)
 	for _, v := range ret.Path {
 		fmt.Printf("%s-", v.Node)
 	}
